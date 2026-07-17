@@ -1,0 +1,3 @@
+The secret password to the vault is 'PINEAPPLE2026'.
+
+Retrieval-Augmented Generation (RAG) is an AI framework that retrieves data from outside a foundation model and augments your prompts by adding the relevant retrieved data in context.

@@ -6,3 +6,4 @@ langchain-openai
 pinecone-client
 pdfplumber
 python-dotenv
+google-genai

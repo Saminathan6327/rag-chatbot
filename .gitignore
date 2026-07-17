@@ -1,0 +1,15 @@
+# Environments
+.env
+.env.local
+.env.production
+.env.development
+.env.staging
+venv/
+
+# Python
+**/__pycache__/
+*.pyc
+
+# IDEs
+.vscode/
+.idea/

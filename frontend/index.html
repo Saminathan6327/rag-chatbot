@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Chatbot Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-brain-circuit brand-icon"></i>
+                <h1>RAG Chatbot</h1>
+            </div>
+            
+            <!-- Connection Status -->
+            <div class="status-card">
+                <div class="status-header">
+                    <span class="status-dot online"></span>
+                    <span class="status-label">Database Online</span>
+                </div>
+                <div class="status-detail">Index: <strong>rag-chatbot</strong></div>
+            </div>
+
+            <!-- Upload Zone -->
+            <div class="upload-section">
+                <h2>Knowledge Base</h2>
+                <p class="section-desc">Add text or PDF documents to your chatbot's knowledge base.</p>
+                
+                <div class="upload-box" id="drop-zone">
+                    <input type="file" id="file-input" accept=".txt,.pdf" multiple hidden>
+                    <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                    <p>Drag & drop or <span>browse</span></p>
+                    <span class="file-type-info">Supports TXT and PDF</span>
+                </div>
+
+                <div class="upload-progress-container" id="progress-container" style="display: none;">
+                    <div class="progress-info">
+                        <span id="uploading-filename">file.pdf</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                </div>
+
+                <div class="uploaded-files-list" id="uploaded-files-list">
+                    <!-- Dynamic file list will be injected here -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-container">
+            <header class="chat-header">
+                <div class="header-info">
+                    <h2>AI Assistant</h2>
+                    <p>Powered by Gemini 3.1 & Pinecone</p>
+                </div>
+            </header>
+
+            <div class="messages-area" id="messages-area">
+                <!-- Welcome Message -->
+                <div class="message system-message">
+                    <div class="message-avatar">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <p>Hello! I am your RAG-powered chatbot. I can answer questions about the documents uploaded to my database.</p>
+                        <p>To get started, try uploading a PDF or text file on the left side, or ask me something based on the sample file!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <form id="chat-form">
+                    <input type="text" id="user-input" placeholder="Ask a question about your documents..." autocomplete="off" required>
+                    <button type="submit" class="send-btn" id="send-btn">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
