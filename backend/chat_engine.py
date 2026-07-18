@@ -4,8 +4,9 @@ from google.genai import types
 from pinecone import Pinecone
 from dotenv import load_dotenv
 
-# Load .env
-load_dotenv(dotenv_path=".env")
+# Load .env relative to the current file's directory
+base_dir = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(dotenv_path=os.path.join(base_dir, ".env"))
 
 GEMINI_KEY = os.getenv("GEMINI_API_KEY")
 PINECONE_KEY = os.getenv("PINECONE_API_KEY")

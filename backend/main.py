@@ -30,7 +30,8 @@ async def upload_file(file: UploadFile = File(...)):
     """
     Accepts PDF or TXT file upload, processes it, and loads it to the RAG database.
     """
-    temp_dir = "temp_uploads"
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    temp_dir = os.path.join(base_dir, "temp_uploads")
     if not os.path.exists(temp_dir):
         os.makedirs(temp_dir)
         

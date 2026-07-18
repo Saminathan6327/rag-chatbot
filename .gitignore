@@ -5,11 +5,18 @@
 .env.development
 .env.staging
 venv/
+.venv/
+env/
+ENV/
 
 # Python
 **/__pycache__/
 *.pyc
 *.pyo
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Backend runtime artifacts
 backend/temp_uploads/
@@ -22,3 +29,7 @@ backend/data/
 # OS
 .DS_Store
 Thumbs.db
+
+# Frontend / JS artifacts
+node_modules/
+dist/
