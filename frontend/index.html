@@ -3,46 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAG Chatbot Dashboard</title>
+    <title>RAG Chatbot — AI Knowledge Assistant</title>
+    <meta name="description" content="An intelligent RAG-powered chatbot that answers questions from your uploaded documents using Gemini AI and Pinecone vector search.">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom Style -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Marked.js for Markdown Rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- Animated Background Orbs -->
+    <div class="bg-orbs" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
     <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
+
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="sidebar" id="sidebar">
+
+            <!-- Brand -->
             <div class="brand">
-                <i class="fa-solid fa-brain-circuit brand-icon"></i>
-                <h1>RAG Chatbot</h1>
-            </div>
-            
-            <!-- Connection Status -->
-            <div class="status-card">
-                <div class="status-header">
-                    <span class="status-dot online"></span>
-                    <span class="status-label">Database Online</span>
+                <div class="brand-icon-wrap">
+                    <i class="fa-solid fa-brain brand-icon"></i>
                 </div>
-                <div class="status-detail">Index: <strong>rag-chatbot</strong></div>
+                <div class="brand-text">
+                    <span class="brand-title">RAG Chatbot</span>
+                    <span class="brand-sub">Knowledge Assistant</span>
+                </div>
             </div>
 
-            <!-- Upload Zone -->
+            <!-- API Status -->
+            <div class="status-card" id="status-card">
+                <div class="status-row">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span class="status-label" id="status-label">Connecting…</span>
+                </div>
+                <div class="status-detail">
+                    Index: <strong>rag-chatbot</strong> &nbsp;·&nbsp; Gemini 3.1 Flash
+                </div>
+            </div>
+
+            <!-- Upload Section -->
             <div class="upload-section">
-                <h2>Knowledge Base</h2>
-                <p class="section-desc">Add text or PDF documents to your chatbot's knowledge base.</p>
-                
-                <div class="upload-box" id="drop-zone">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-database section-icon"></i> Knowledge Base</h2>
+                </div>
+                <p class="section-desc">Upload PDF or TXT files to add them to the chatbot's knowledge base.</p>
+
+                <!-- Drop Zone -->
+                <div class="upload-box" id="drop-zone" role="button" tabindex="0" aria-label="Upload documents">
                     <input type="file" id="file-input" accept=".txt,.pdf" multiple hidden>
-                    <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-                    <p>Drag & drop or <span>browse</span></p>
-                    <span class="file-type-info">Supports TXT and PDF</span>
+                    <div class="upload-icon-wrap">
+                        <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                    </div>
+                    <p>Drag &amp; drop or <span>browse files</span></p>
+                    <span class="file-type-info">PDF &amp; TXT supported</span>
                 </div>
 
+                <!-- Progress -->
                 <div class="upload-progress-container" id="progress-container" style="display: none;">
                     <div class="progress-info">
                         <span id="uploading-filename">file.pdf</span>
@@ -51,47 +82,97 @@
                     <div class="progress-bar-bg">
                         <div class="progress-bar" id="progress-bar"></div>
                     </div>
+                    <span class="progress-status-text">Processing &amp; indexing…</span>
                 </div>
 
-                <div class="uploaded-files-list" id="uploaded-files-list">
-                    <!-- Dynamic file list will be injected here -->
+                <!-- Uploaded Files List -->
+                <div class="files-list-header" id="files-list-header" style="display:none;">
+                    <span>Indexed Documents</span>
+                    <span class="file-count-badge" id="file-count-badge">0</span>
                 </div>
+                <div class="uploaded-files-list" id="uploaded-files-list"></div>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <span>Powered by</span>
+                <span class="tech-badge"><i class="fa-brands fa-google"></i> Gemini</span>
+                <span class="tech-badge"><i class="fa-solid fa-database"></i> Pinecone</span>
             </div>
         </aside>
 
-        <!-- Main Chat Area -->
+        <!-- ===== MAIN CHAT AREA ===== -->
         <main class="chat-container">
+
+            <!-- Header -->
             <header class="chat-header">
-                <div class="header-info">
-                    <h2>AI Assistant</h2>
-                    <p>Powered by Gemini 3.1 & Pinecone</p>
+                <div class="header-left">
+                    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="header-info">
+                        <h2>AI Assistant</h2>
+                        <p>Retrieval-Augmented Generation · Gemini 3.1 Flash · Pinecone</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="action-btn" id="clear-chat-btn" title="Clear conversation">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>Clear</span>
+                    </button>
                 </div>
             </header>
 
-            <div class="messages-area" id="messages-area">
-                <!-- Welcome Message -->
-                <div class="message system-message">
-                    <div class="message-avatar">
+            <!-- Messages Area -->
+            <div class="messages-area" id="messages-area" role="log" aria-live="polite">
+                <!-- Welcome Card -->
+                <div class="welcome-card" id="welcome-card">
+                    <div class="welcome-icon">
                         <i class="fa-solid fa-robot"></i>
                     </div>
-                    <div class="message-content">
-                        <p>Hello! I am your RAG-powered chatbot. I can answer questions about the documents uploaded to my database.</p>
-                        <p>To get started, try uploading a PDF or text file on the left side, or ask me something based on the sample file!</p>
+                    <h3>Hello! I'm your RAG Assistant</h3>
+                    <p>I can answer questions about documents you've uploaded to the knowledge base. Try uploading a PDF or TXT file, then ask me anything!</p>
+                    <div class="suggestion-chips">
+                        <button class="chip" data-query="What topics are covered in the uploaded documents?">
+                            <i class="fa-solid fa-magnifying-glass"></i> Summarize documents
+                        </button>
+                        <button class="chip" data-query="Give me a brief overview of the knowledge base content.">
+                            <i class="fa-solid fa-list"></i> Knowledge overview
+                        </button>
+                        <button class="chip" data-query="What are the key takeaways from the uploaded files?">
+                            <i class="fa-solid fa-lightbulb"></i> Key takeaways
+                        </button>
                     </div>
                 </div>
             </div>
 
+            <!-- Input Area -->
             <div class="chat-input-container">
-                <form id="chat-form">
-                    <input type="text" id="user-input" placeholder="Ask a question about your documents..." autocomplete="off" required>
-                    <button type="submit" class="send-btn" id="send-btn">
-                        <i class="fa-solid fa-paper-plane"></i>
-                    </button>
-                </form>
+                <div class="input-wrapper">
+                    <form id="chat-form" autocomplete="off">
+                        <textarea
+                            id="user-input"
+                            placeholder="Ask a question about your documents…"
+                            rows="1"
+                            aria-label="Chat input"
+                        ></textarea>
+                        <div class="input-actions">
+                            <span class="char-counter" id="char-counter"></span>
+                            <button type="submit" class="send-btn" id="send-btn" aria-label="Send message">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <p class="input-hint">Press <kbd>Enter</kbd> to send &nbsp;·&nbsp; <kbd>Shift+Enter</kbd> for new line</p>
             </div>
+
         </main>
     </div>
-    <!-- Custom JS -->
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container" aria-live="assertive"></div>
+
     <script src="app.js"></script>
 </body>
 </html>

@@ -9,7 +9,16 @@ venv/
 # Python
 **/__pycache__/
 *.pyc
+*.pyo
+
+# Backend runtime artifacts
+backend/temp_uploads/
+backend/data/
 
 # IDEs
 .vscode/
 .idea/
+
+# OS
+.DS_Store
+Thumbs.db
